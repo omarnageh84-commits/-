@@ -9,14 +9,14 @@
         input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 12px; border: 1px solid #ddd; font-size: 18px; box-sizing: border-box; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .card { background: white; padding: 15px; border-radius: 12px; box-shadow: 0 3px 6px rgba(0,0,0,0.1); }
-        .name { font-weight: bold; color: #2c3e50; font-size: 16px; margin-bottom: 8px; text-transform: uppercase; }
+        .name { font-weight: bold; color: #2c3e50; font-size: 16px; margin-bottom: 5px; text-transform: uppercase; }
         .info { font-weight: bold; color: #e67e22; margin-bottom: 5px; }
         .desc { font-size: 15px; color: #555; line-height: 1.5; border-top: 1px solid #eee; padding-top: 8px; }
     </style>
 </head>
 <body>
 
-<input type="text" id="search" placeholder="ابحث عن دوا..." onkeyup="filter()">
+<input type="text" id="search" placeholder="ابحث باسم الدواء أو التصنيف..." onkeyup="filter()">
 <div class="grid" id="list"></div>
 
 <script>
@@ -28,15 +28,15 @@ Papa.parse(csvUrl, {
     complete: function(results) {
         const container = document.getElementById('list');
         results.data.forEach(row => {
-            // هنا بنفترض إن العناوين في الشيت هي: Name, Price, Category, Description
-            // لو العناوين مختلفة قولي أعدلها لك
+            if (!row['انجليزي']) return; // تجاهل الصفوف الفارغة
             const div = document.createElement('div');
             div.className = 'card';
-            div.setAttribute('data-cat', row.Category || '');
+            div.setAttribute('data-cat', row['تصنيف'] || '');
             div.innerHTML = `
-                <div class="name">${row.Name}</div>
-                <div class="info">${row.Price}</div>
-                <div class="desc">${row.Description}</div>
+                <div class="name">${row['انجليزي']}</div>
+                <div class="name" style="font-size:14px; color:#666;">${row['عربي']}</div>
+                <div class="info">${row['Column 5']} جنيه</div>
+                <div class="desc">${row['الوصف']}</div>
             `;
             container.appendChild(div);
         });
